@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--Load the AJAX API-->
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+		google.charts.load('current',{'packages':['corechart']});
+		google.charts.setOnLoadCallback(drawSheets);
+		
+		function drawSheets() {
+		
+			SheetName('MerchandiseTrade(USD)', 'SELECT A,H',
+						  topMerchandise); 
+			SheetName('MerchandiseTrade(USD)', 'SELECT A,J,K,L,M,N,O,P',
+						  MerchandiseGrowth);			  
+			
+			SheetName('USA', 'SELECT N,O',
+						  usaIM16);
+			SheetName('USA', 'SELECT P,Q',
+						  usaEX16);
+						  
+			SheetName('China', 'SELECT N,O',
+						  chinaIM16);
+			SheetName('China', 'SELECT P,Q',
+						  chinaEX16);
+						  
+			SheetName('Germany', 'SELECT N,O',
+						  GermanyIM16);
+			SheetName('Germany', 'SELECT P,Q',
+						  GermanyEX16);
+			
+			SheetName('Japan', 'SELECT N,O',
+						  JapanIM16);
+			SheetName('Japan', 'SELECT P,Q',
+						  JapanEX16);
+			
+			SheetName('Netherlands', 'SELECT N,O',
+						  NetherlandsIM16);
+			SheetName('Netherlands', 'SELECT P,Q',
+						  NetherlandsEX16);	
+			
+			SheetName('France', 'SELECT N,O',
+						  FranceIM16);
+			SheetName('France', 'SELECT P,Q',
+						  FranceEX16);	
+						  
+			SheetName('UK', 'SELECT N,O',
+						  UKIM16);
+			SheetName('UK', 'SELECT P,Q',
+						  UKEX16);	
+
+			SheetName('Korea', 'SELECT N,O',
+						  KoreaIM16);
+			SheetName('Korea', 'SELECT P,Q',
+						  KoreaEX16);	
+
+			SheetName('Italy', 'SELECT N,O',
+						  ItalyIM16);
+			SheetName('Italy', 'SELECT P,Q',
+						  ItalyEX16);			  
+			
+			SheetName('Canada', 'SELECT N,O',
+						  CanadaIM16);
+			SheetName('Canada', 'SELECT P,Q',
+						  CanadaEX16);
+						  
+			SheetName('Mexico', 'SELECT N,O',
+						  MexicoIM16);
+			SheetName('Mexico', 'SELECT P,Q',
+						  MexicoEX16);
+						  
+			SheetName('Belgium', 'SELECT N,O',
+						  BelgiumIM16);
+			SheetName('Belgium', 'SELECT P,Q',
+						  BelgiumEX16);
+						  
+			SheetName('Singapore', 'SELECT N,O',
+						  SingaporeIM16);
+			SheetName('Singapore', 'SELECT P,Q',
+						  SingaporeEX16);
+						  
+			SheetName('India', 'SELECT N,O',
+						  IndiaIM16);
+			SheetName('India', 'SELECT P,Q',
+						  IndiaEX16);
+
+			SheetName('Spain', 'SELECT N,O',
+						  SpainIM16);
+			SheetName('Spain', 'SELECT P,Q',
+						  SpainEX16);
+
+			SheetName('Switzerland', 'SELECT N,O',
+						  SwitzerlandIM16);
+			SheetName('Switzerland', 'SELECT P,Q',
+						  SwitzerlandEX16);
+						  
+			
+			SheetName('Russia', 'SELECT N,O',
+						  RussiaIM16);
+			SheetName('Russia', 'SELECT P,Q',
+						  RussiaEX16);
+						  
+			SheetName('Thailand', 'SELECT N,O',
+						  ThailandIM16);
+			SheetName('Thailand', 'SELECT P,Q',
+						  ThailandEX16);
+						  
+			SheetName('Poland', 'SELECT N,O',
+						  PolandIM16);
+			SheetName('Poland', 'SELECT P,Q',
+						  PolandEX16);
+						  
+			SheetName('Australia', 'SELECT N,O',
+						  AustraliaIM16);
+			SheetName('Australia', 'SELECT P,Q',
+						  AustraliaEX16);			  
+						  
+		} //drawSheets
+		
+		function SheetName(sheetName, query, responseHandler) {
+			var queryString = encodeURIComponent(query);
+			var query = new google.visualization.Query(
+				'https://docs.google.com/spreadsheets/d/1Rb3iCDHQAkkmiCRorvflBQMuma8fJNKKxbZOhsoeyY4/gviz/tq?sheet='	
+				+ sheetName + '&headers=1&tq=' + queryString);
+			query.send(responseHandler);
+		} //SheetName
+
+		function checkError(response) {
+			if (response.isError()) {
+				alert('Error in query: ' + response.getMessage() +
+					' ' + response.getDetailedMessage());
+				return;
+			}		
+		}//Error Check
+		
+		function topMerchandise(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column:1, desc:true});
+			
+			var options = {
+				height: 500,
+				colorAxis: {colors: ['#4374e0','#e7711c']}, 
+				title: 'Top 20 Countries by Educational Spending in 2014 (US $)'
+			};
+			
+			var chart = new google.visualization.GeoChart(
+					document.getElementById('merchaindise_div'));
+			
+			chart.draw(data, options);
+			
+		} //Top 20 Merchandise Trade Countries in 2016
+		
+		
+		function MerchandiseGrowth(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				width: 1300,
+				height: 600,
+				vAxis: {title: 'Growth in Percentage (%)'},
+				hAxis: {title: 'Country'},
+				seriesType: 'bars',
+				series: {6: {type: 'line'}}
+			};
+			
+			var chart = new google.visualization.ComboChart(
+						document.getElementById('merchaindisegrowth_div'));
+			chart.draw(data, options);
+		} //Top 20 Countries' Merchandise Trade Growth in Percentage
+		
+		
+		function usaIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('usa_im_div'));
+			chart.draw(data, options);
+		} //USA's Imports in 2016
+		
+	
+		function usaEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('usa_ex_div'));
+			chart.draw(data, options);
+		} //USA's Exports in 2016
+		
+	
+		function chinaIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('china_im_div'));
+			chart.draw(data, options);
+		} //China's Imports in 2016
+		
+		function chinaEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('china_ex_div'));
+			chart.draw(data, options);
+		} //China's Exports in 2016
+		
+		
+		function GermanyIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('germany_im_div'));
+			chart.draw(data, options);
+		} //Germany's Imports in 2016
+		
+		function GermanyEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('germany_ex_div'));
+			chart.draw(data, options);
+		} //Germany's Exports in 2016
+		
+		
+		function JapanIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('japan_im_div'));
+			chart.draw(data, options);
+		} //Japan's Imports in 2016
+		
+		function JapanEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('japan_ex_div'));
+			chart.draw(data, options);
+		} //Japan's Exports in 2016
+		
+		
+		function NetherlandsIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('netherlands_im_div'));
+			chart.draw(data, options);
+		} //Netherlands's Imports in 2016
+		
+		function NetherlandsEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('netherlands_ex_div'));
+			chart.draw(data, options);
+		} //Netherlands's Exports in 2016
+		
+		
+		function FranceIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('france_im_div'));
+			chart.draw(data, options);
+		} //France's Imports in 2016
+		
+		function FranceEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('france_ex_div'));
+			chart.draw(data, options);
+		} //France's Exports in 2016
+		
+		
+		function UKIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('uk_im_div'));
+			chart.draw(data, options);
+		} //UK's Imports in 2016
+		
+		function UKEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('uk_ex_div'));
+			chart.draw(data, options);
+		} //UK's Exports in 2016
+		
+		
+		function KoreaIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('korea_im_div'));
+			chart.draw(data, options);
+		} //Korea's Imports in 2016
+		
+		function KoreaEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('korea_ex_div'));
+			chart.draw(data, options);
+		} //Korea's Exports in 2016
+		
+		
+		function ItalyIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('italy_im_div'));
+			chart.draw(data, options);
+		} //Italy's Imports in 2016
+		
+		function ItalyEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('italy_ex_div'));
+			chart.draw(data, options);
+		} //Italy's Exports in 2016
+		
+		function CanadaIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('canada_im_div'));
+			chart.draw(data, options);
+		} //Canada's Imports in 2016
+		
+		function CanadaEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('canada_ex_div'));
+			chart.draw(data, options);
+		} //Canada's Exports in 2016
+		
+		
+		function MexicoIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('mexico_im_div'));
+			chart.draw(data, options);
+		} //Mexico's Imports in 2016
+		
+		function MexicoEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('mexico_ex_div'));
+			chart.draw(data, options);
+		} //Mexico's Exports in 2016
+		
+		
+		function BelgiumIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('belgium_im_div'));
+			chart.draw(data, options);
+		} //Belgium's Imports in 2016
+		
+		function BelgiumEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('belgium_ex_div'));
+			chart.draw(data, options);
+		} //Belgium's Exports in 2016
+		
+		
+		function SingaporeIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('singapore_im_div'));
+			chart.draw(data, options);
+		} //Singapore's Imports in 2016
+		
+		function SingaporeEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('singapore_ex_div'));
+			chart.draw(data, options);
+		} //Singapore's Exports in 2016
+		
+		
+		function IndiaIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('india_im_div'));
+			chart.draw(data, options);
+		} //India's Imports in 2016
+		
+		function IndiaEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('india_ex_div'));
+			chart.draw(data, options);
+		} //India's Exports in 2016
+		
+		
+		function SpainIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('spain_im_div'));
+			chart.draw(data, options);
+		} //Spain's Imports in 2016
+		
+		function SpainEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('spain_ex_div'));
+			chart.draw(data, options);
+		} //Spain's Exports in 2016
+		
+		
+		function SwitzerlandIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('switzerland_im_div'));
+			chart.draw(data, options);
+		} //Switzerland's Imports in 2016
+		
+		function SwitzerlandEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('switzerland_ex_div'));
+			chart.draw(data, options);
+		} //Switzerland's Exports in 2016
+		
+		
+		function RussiaIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('russia_im_div'));
+			chart.draw(data, options);
+		} //Russia's Imports in 2016
+		
+		function RussiaEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('russia_ex_div'));
+			chart.draw(data, options);
+		} //Russia's Exports in 2016
+		
+		
+		function ThailandIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('thailand_im_div'));
+			chart.draw(data, options);
+		} //Thailand's Imports in 2016
+		
+		function ThailandEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('thailand_ex_div'));
+			chart.draw(data, options);
+		} //Thailand's Exports in 2016
+		
+		
+		function PolandIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('poland_im_div'));
+			chart.draw(data, options);
+		} //Poland's Imports in 2016
+		
+		function PolandEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('poland_ex_div'));
+			chart.draw(data, options);
+		} //Poland's Exports in 2016
+		
+		
+		function AustraliaIM16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('australia_im_div'));
+			chart.draw(data, options);
+		} //Australia's Imports in 2016
+		
+		function AustraliaEX16(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+					width: 500,
+					height: 500,
+					legend: {position: 'top', maxLines: 3},
+					is3D: true,
+			};
+			
+			var chart = new google.visualization.PieChart(
+					document.getElementById('australia_ex_div'));
+			chart.draw(data, options);
+		} //Australia's Exports in 2016
+		
+	</script>
+</head>
+
+<body>
+	
+		<h1 align="center"><font color="#0000A8" face="Times New Roman" >Final Project</font></h1>
+		<h4 align="center"><font color="#0000A8">-----------------------------------------------------------------------------------------</font></h4>
+		<h4 align="center"><font color="#0000A8"> Visualization of Complex Data (DATS 6401_O10)  |  Phoebe Wu</font></h4>
+	<br />
+		
+		<ol><h2 align="center"><font color="#0000E6">Merchandise Trade for Top 20 Countries From 2010 to 2016</font></h2>
+			
+		<h4><font color="#7878FF">Top 20 Countries By Merchandise Trade in 2016 (US $)</font></h4>
+		
+		<div id="merchaindise_div" style="width:800px height:700"></div>
+	<br /><br />	
+	<h4><a href="https://www.datawrapper.de/_/7MlH3/"><font color="#7878FF">Top 20 Countries in Merchandise Trade from 2010 to 2016</font></a></h4>	
+	<br /><br />
+	
+	<h4><font color="#7878FF">Top 20 Countries By Merchandise Trade Growth From 2011 to 2016(%)</font></h4>
+	<div id="merchaindisegrowth_div" style="width:1250px height:600"></div>
+	
+	<br /><br />
+	
+	<h4><a href="https://www.datawrapper.de/_/RhxtG/"><font color="#7878FF">Top 20 Countries' Merchandise Imports from 2010 to 2016</font></a></h4>
+	<h4><a href="https://www.datawrapper.de/_/3JoC1/"><font color="#7878FF">Top 20 Countries' Merchandise Exports from 2010 to 2016</font></a></h4>		
+	<h3><ul type="disc"><li>Export Growth vs Import Growth 2011~2016</li></h3>
+	<h4><a href="https://public.tableau.com/profile/phoebe.wu7036#!/vizhome/ExportGrowthvsImportGrowth20112016/Dashboard1?publish=yes"><font color="#7878FF">Top 20 Countries' Export Growth and Import Growth 2011~2016</font></a></h4>	
+	
+	<br /><br />
+	
+	<h3><ul type="disc"><li>Merchandise in Agricultural & Raw Materials</li></h3>
+	<h4><a href="https://www.datawrapper.de/_/FsrXQ/"><font color="#7878FF">Agricultural & Raw Materials Imports from 2010 to 2016</font></a></h4>	
+	<h4><a href="https://www.datawrapper.de/_/boAGI/"><font color="#7878FF">Agricultural & Raw Materials Exports from 2010 to 2016</font></a></h4>	
+	
+	<h3><ul type="disc"><li>Merchandise in Food</li></h3>
+	<h4><a href="https://www.datawrapper.de/_/AdJU8/"><font color="#7878FF">Food Imports from 2010 to 2016</font></a></h4>	
+	<h4><a href="https://www.datawrapper.de/_/p8Dg7/"><font color="#7878FF">Food Exports from 2010 to 2016</font></a></h4>	
+	
+	<h3><ul type="disc"><li>Merchandise in Manufacture</li></h3>
+	<h4><a href="https://www.datawrapper.de/_/OJVPX/"><font color="#7878FF">Manufacture Imports from 2010 to 2016</font></a></h4>	
+	<h4><a href="https://www.datawrapper.de/_/NJ1Mw/"><font color="#7878FF">Manufacture Exports from 2010 to 2016</font></a></h4>	
+	
+	<h3><ul type="disc"><li>Merchandise in Fuel</li></h3>
+	<h4><a href="https://www.datawrapper.de/_/0pI3T/"><font color="#7878FF">Fuel Imports from 2010 to 2016</font></a></h4>	
+	<h4><a href="https://www.datawrapper.de/_/uZLg7/"><font color="#7878FF">Fuel Exports from 2010 to 2016</font></a></h4>	
+	
+	<h3><ul type="disc"><li>Merchandise in Ores & Metals</li></h3>
+	<h4><a href="https://www.datawrapper.de/_/K1Oca/"><font color="#7878FF">Ores & Metals Imports from 2010 to 2016</font></a></h4>	
+	<h4><a href="https://www.datawrapper.de/_/dffmF/"><font color="#7878FF">Ores & Metals Exports from 2010 to 2016</font></a></h4>	
+	<br /><br />
+	<br /><br />
+	
+	<h3 align="center"><font color="#0000E6">USA</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">USA's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">USA's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="usa_im_div" style="width:600px"></div></td>
+			<td><div id="usa_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+	<h3 align="center"><font color="#0000E6">China</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">China's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">China's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="china_im_div" style="width:600px"></div></td>
+			<td><div id="china_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+	<h3 align="center"><font color="#0000E6">Germany</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Germany's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Germany's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="germany_im_div" style="width:600px"></div></td>
+			<td><div id="germany_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+	<h3 align="center"><font color="#0000E6">Japan</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Japan's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Japan's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="japan_im_div" style="width:600px"></div></td>
+			<td><div id="japan_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+	<h3 align="center"><font color="#0000E6">Netherlands</h3>	
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Netherlands's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Netherlands's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="netherlands_im_div" style="width:600px"></div></td>
+			<td><div id="netherlands_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>		
+	
+	<h3 align="center"><font color="#0000E6">France</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">France's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">France's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="france_im_div" style="width:600px"></div></td>
+			<td><div id="france_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>		
+	
+	<h3 align="center"><font color="#0000E6">UK</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">UK's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">UK's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="uk_im_div" style="width:600px"></div></td>
+			<td><div id="uk_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+	<h3 align="center"><font color="#0000E6">Korea</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Korea's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Korea's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="korea_im_div" style="width:600px"></div></td>
+			<td><div id="korea_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+	<h3 align="center"><font color="#0000E6">Italy</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Italy's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Italy's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="italy_im_div" style="width:600px"></div></td>
+			<td><div id="italy_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+	<h3 align="center"><font color="#0000E6">Canada</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Canada's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Canada's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="canada_im_div" style="width:600px"></div></td>
+			<td><div id="canada_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+	<h3 align="center"><font color="#0000E6">Maxico</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Mexico's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Mexico's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="mexico_im_div" style="width:600px"></div></td>
+			<td><div id="mexico_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+	<h3 align="center"><font color="#0000E6">Belgium</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Belgium's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Belgium's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="belgium_im_div" style="width:600px"></div></td>
+			<td><div id="belgium_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table> 
+	
+	<h3 align="center"><font color="#0000E6">Singapore</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Singapore's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Singapore's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="singapore_im_div" style="width:600px"></div></td>
+			<td><div id="singapore_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table> 
+	
+	<h3 align="center"><font color="#0000E6">India</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">India's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">India's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="india_im_div" style="width:600px"></div></td>
+			<td><div id="india_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table> 
+	
+	<h3 align="center"><font color="#0000E6">Spain</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Spain's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Spain's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="spain_im_div" style="width:600px"></div></td>
+			<td><div id="spain_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table> 
+	
+	<h3 align="center"><font color="#0000E6">Switzerland</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Switzerland's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Switzerland's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="switzerland_im_div" style="width:600px"></div></td>
+			<td><div id="switzerland_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table> 
+	
+	<h3 align="center"><font color="#0000E6">Russia</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Russia's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Russia's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="russia_im_div" style="width:600px"></div></td>
+			<td><div id="russia_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+	<h3 align="center"><font color="#0000E6">Thailand</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Thailand's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Thailand's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="thailand_im_div" style="width:600px"></div></td>
+			<td><div id="thailand_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+	<h3 align="center"><font color="#0000E6">Poland</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Poland's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Poland's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="poland_im_div" style="width:600px"></div></td>
+			<td><div id="poland_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+	<h3 align="center"><font color="#0000E6">Australia</h3>
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Australia's Imports in 2016</font></h4></th>
+			<th><font color="#7878FF">Australia's Exports in 2016</font></th>
+		</tr>
+		<tr>
+			<td><div id="australia_im_div" style="width:600px"></div></td>
+			<td><div id="australia_ex_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	<br /><br />	
+			
+	<br /><br />
+		<h4><font face="Arial"><ul type="disc"><li>My learning process</li></font></h4>
+		<p>Through this visualization project, I learn more and sharpen my skills in designing and the visualization technique using google API, Tableau, and other online websites.</p>
+		<p>Next, I would like to do more practice on D3.js and get familiar with it.</p>
+		<p>So that I can create more interesting and different charts to make the complex data easies to read, analyze and understand.</p>
+		
+	<br /><br />
+	<br /><br />
+		
+	<div id="content_footer">
+		<div id="footer">
+			<p align="center">
+			<font color="#878787">
+				&copy; 
+				<script>
+					var d = new Date();
+					document.write(d.getFullYear());
+				</script> |
+				<a href="https://developers.google.com/chart/"><font color="#878787">Google Charts</font></a> |
+				<a href="https://app.datawrapper.de"><font color="#878787">My Datawrapper</font></a> |
+				<a href="https://public.tableau.com/profile/phoebe.wu7036#!/"><font color="#878787">My Tableau Public</font></a>
+			</font> 
+			</p>
+		</div><!-- footer -->			
+	</div><!-- content_footer -->
+	
+</body>
+</html>
