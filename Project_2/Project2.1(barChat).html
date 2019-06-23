@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--Load the AJAX API-->
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+		google.charts.load('current',{'packages':['corechart']});
+		google.charts.setOnLoadCallback(drawSheets);
+		
+		function drawSheets() {
+		
+			SheetName('MerchandiseTrade(USD)', 'SELECT A,H',
+						  topMerchandise);
+			SheetName('USA', 'SELECT A,B,C,D,E,F,G',
+						  usaAllImports);
+			SheetName('USA', 'SELECT A,H,I,J,K,L,M',
+						  usaAllExports);			  
+						  
+			SheetName('China','SELECT A,B,C,D,E,F,G',
+						 chinaAllImports);
+			SheetName('China', 'SELECT A,H,I,J,K,L,M',
+						  chinaAllExports);
+						  
+			SheetName('Germany','SELECT A,B,C,D,E,F,G',
+						 GermanyAllImports);
+			SheetName('Germany', 'SELECT A,H,I,J,K,L,M',
+						  GermanyAllExports);
+			
+			SheetName('Japan','SELECT A,B,C,D,E,F,G',
+						 JapanAllImports);
+			SheetName('Japan', 'SELECT A,H,I,J,K,L,M',
+						  JapanAllExports);
+			
+			SheetName('Netherlands','SELECT A,B,C,D,E,F,G',
+						 NetherlandsAllImports);
+			SheetName('Netherlands', 'SELECT A,H,I,J,K,L,M',
+						  NetherlandsAllExports);
+			
+			SheetName('France','SELECT A,B,C,D,E,F,G',
+						 FranceAllImports);
+			SheetName('France', 'SELECT A,H,I,J,K,L,M',
+						  FranceAllExports);
+						  
+			SheetName('UK','SELECT A,B,C,D,E,F,G',
+						  UKAllImports);
+			SheetName('UK', 'SELECT A,H,I,J,K,L,M',
+						  UKAllExports);
+			
+			SheetName('Korea','SELECT A,B,C,D,E,F,G',
+						  KoreaAllImports);
+			SheetName('Korea', 'SELECT A,H,I,J,K,L,M',
+						  KoreaAllExports);
+			
+			SheetName('Italy','SELECT A,B,C,D,E,F,G',
+						  ItalyAllImports);
+			SheetName('Italy', 'SELECT A,H,I,J,K,L,M',
+						  ItalyAllExports);
+
+			SheetName('Canada','SELECT A,B,C,D,E,F,G',
+						  CanadaAllImports);
+			SheetName('Canada', 'SELECT A,H,I,J,K,L,M',
+						  CanadaAllExports);
+						  
+			SheetName('Mexico','SELECT A,B,C,D,E,F,G',
+						  MexicoAllImports);
+			SheetName('Mexico', 'SELECT A,H,I,J,K,L,M',
+						  MexicoAllExports);
+						  
+			SheetName('Belgium','SELECT A,B,C,D,E,F,G',
+						  BelgiumAllImports);
+			SheetName('Belgium', 'SELECT A,H,I,J,K,L,M',
+						  BelgiumAllExports);
+				  
+			SheetName('Singapore','SELECT A,B,C,D,E,F,G',
+						  SingaporeAllImports);
+			SheetName('Singapore', 'SELECT A,H,I,J,K,L,M',
+						  SingaporeAllExports);
+						  
+			SheetName('India','SELECT A,B,C,D,E,F,G',
+						  IndiaAllImports);
+			SheetName('India', 'SELECT A,H,I,J,K,L,M',
+						  IndiaAllExports);
+			
+			SheetName('Spain','SELECT A,B,C,D,E,F,G',
+						  SpainAllImports);
+			SheetName('Spain', 'SELECT A,H,I,J,K,L,M',
+						  SpainAllExports);
+			
+			SheetName('Switzerland','SELECT A,B,C,D,E,F,G',
+						  SwitzerlandAllImports);
+			SheetName('Switzerland', 'SELECT A,H,I,J,K,L,M',
+						  SwitzerlandAllExports);
+			
+			SheetName('Russia','SELECT A,B,C,D,E,F,G',
+						  RussiaAllImports);
+			SheetName('Russia', 'SELECT A,H,I,J,K,L,M',
+						  RussiaAllExports);
+						  
+			SheetName('Thailand','SELECT A,B,C,D,E,F,G',
+						  ThailandAllImports);
+			SheetName('Thailand', 'SELECT A,H,I,J,K,L,M',
+						  ThailandAllExports);
+						  
+			SheetName('Poland','SELECT A,B,C,D,E,F,G',
+						  PolandAllImports);
+			SheetName('Poland', 'SELECT A,H,I,J,K,L,M',
+						  PolandAllExports);
+						  
+			SheetName('Australia','SELECT A,B,C,D,E,F,G',
+						  AustraliaAllImports);
+			SheetName('Australia', 'SELECT A,H,I,J,K,L,M',
+						  AustraliaAllExports);
+							  
+		} //drawSheets
+		
+		function SheetName(sheetName, query, responseHandler) {
+			var queryString = encodeURIComponent(query);
+			var query = new google.visualization.Query(
+				'https://docs.google.com/spreadsheets/d/1Rb3iCDHQAkkmiCRorvflBQMuma8fJNKKxbZOhsoeyY4/gviz/tq?sheet='	
+				+ sheetName + '&headers=1&tq=' + queryString);
+			query.send(responseHandler);
+		} //SheetName
+
+		function checkError(response) {
+			if (response.isError()) {
+				alert('Error in query: ' + response.getMessage() +
+					' ' + response.getDetailedMessage());
+				return;
+			}		
+		}//Error Check
+		
+		function topMerchandise(response) {
+			checkError(response);
+			var data = response.getDataTable();
+		
+			var options = {
+				height: 500,
+				colorAxis: {colors: ['#FFFF00','#00D100']}, 
+				title: 'Top 20 Countries by Educational Spending in 2014 (US $)'
+			};
+			
+			var chart = new google.visualization.GeoChart(
+					document.getElementById('topeducation_spending_div'));
+			
+			chart.draw(data, options);
+			
+		} //Top 20 Merchandise Trade Countries in 2016
+		
+		
+		function usaAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('usa_all_Im_div'));
+			chart.draw(data, options);
+		} //USA's imports from 2010 to 2016
+		
+		
+		function usaAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('usa_all_ex_div'));
+			chart.draw(data, options);
+		} //USA's exports from 2010 to 2016
+	
+		
+		
+		function chinaAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('china_all_Im_div'));
+			chart.draw(data, options);
+		} //China's imports from 2010 to 2016
+		
+		function chinaAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+				
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('china_all_ex_div'));
+			chart.draw(data, options);
+		} //China's exports from 2010 to 2016
+		
+				
+		function GermanyAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('germany_all_Im_div'));
+			chart.draw(data, options);
+		} //Germany's imports from 2010 to 2016
+		
+		function GermanyAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('germany_all_ex_div'));
+			chart.draw(data, options);
+		} //Germany's exports from 2010 to 2016
+
+		
+		
+		function JapanAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('japan_all_Im_div'));
+			chart.draw(data, options);
+		} //Japan's imports from 2010 to 2016
+		
+		function JapanAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('japan_all_ex_div'));
+			chart.draw(data, options);
+		} //Japan's exports from 2010 to 2016
+		
+		
+		
+		function NetherlandsAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('netherlands_all_Im_div'));
+			chart.draw(data, options);
+		} //Netherlands's imports from 2010 to 2016
+		
+		function NetherlandsAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('netherlands_all_ex_div'));
+			chart.draw(data, options);
+		} //Netherlands's exports from 2010 to 2016
+		
+		
+		
+		function FranceAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('france_all_Im_div'));
+			chart.draw(data, options);
+		} //France's imports from 2010 to 2016
+		
+		function FranceAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('france_all_ex_div'));
+			chart.draw(data, options);
+		} //France's exports from 2010 to 2016
+		
+		
+		function UKAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('uk_all_Im_div'));
+			chart.draw(data, options);
+		} //UK's imports from 2010 to 2016
+		
+		function UKAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('uk_all_ex_div'));
+			chart.draw(data, options);
+		} //UK's exports from 2010 to 2016
+		
+			
+		
+		function KoreaAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('korea_all_Im_div'));
+			chart.draw(data, options);
+		} //Korea's imports from 2010 to 2016
+		
+		function KoreaAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('korea_all_ex_div'));
+			chart.draw(data, options);
+		} //Korea's exports from 2010 to 2016
+		
+				
+		function ItalyAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('italy_all_Im_div'));
+			chart.draw(data, options);
+		} //Italy's imports from 2010 to 2016
+		
+		function ItalyAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('italy_all_ex_div'));
+			chart.draw(data, options);
+		} //Italy's exports from 2010 to 2016
+		
+			
+		function CanadaAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('canada_all_Im_div'));
+			chart.draw(data, options);
+		} //Canada's imports from 2010 to 2016
+		
+		function CanadaAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('canada_all_ex_div'));
+			chart.draw(data, options);
+		} //Canada's exports from 2010 to 2016
+		
+		
+		
+		function MexicoAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('mexico_all_Im_div'));
+			chart.draw(data, options);
+		} //Mexico's imports from 2010 to 2016
+		
+		function MexicoAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('mexico_all_ex_div'));
+			chart.draw(data, options);
+		} //Mexico's exports from 2010 to 2016
+		
+		
+		function BelgiumAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('belgium_all_Im_div'));
+			chart.draw(data, options);
+		} //Belgium's imports from 2010 to 2016
+		
+		function BelgiumAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('belgium_all_ex_div'));
+			chart.draw(data, options);
+		} //Belgium's exports from 2010 to 2016
+		
+		
+		function SingaporeAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('singapore_all_Im_div'));
+			chart.draw(data, options);
+		} //Singapore's imports from 2010 to 2016
+		
+		function SingaporeAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('singapore_all_ex_div'));
+			chart.draw(data, options);
+		} //Singapore's exports from 2010 to 2016
+		
+		
+		
+		function IndiaAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('india_all_Im_div'));
+			chart.draw(data, options);
+		} //India's imports from 2010 to 2016
+		
+		function IndiaAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('india_all_ex_div'));
+			chart.draw(data, options);
+		} //India's exports from 2010 to 2016
+		
+		
+		function SpainAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('spain_all_Im_div'));
+			chart.draw(data, options);
+		} //Spain's imports from 2010 to 2016
+		
+		function SpainAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('spain_all_ex_div'));
+			chart.draw(data, options);
+		} //Spain's exports from 2010 to 2016
+		
+		
+		function SwitzerlandAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('switzerland_all_Im_div'));
+			chart.draw(data, options);
+		} //Switzerland's imports from 2010 to 2016
+		
+		function SwitzerlandAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('switzerland_all_ex_div'));
+			chart.draw(data, options);
+		} //Switzerland's exports from 2010 to 2016
+		
+		
+		function RussiaAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('russia_all_Im_div'));
+			chart.draw(data, options);
+		} //Russia's imports from 2010 to 2016
+		
+		function RussiaAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('russia_all_ex_div'));
+			chart.draw(data, options);
+		} //Russia's exports from 2010 to 2016
+		
+				
+		function ThailandAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('thailand_all_Im_div'));
+			chart.draw(data, options);
+		} //Thailand's imports from 2010 to 2016
+		
+		function ThailandAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('thailand_all_ex_div'));
+			chart.draw(data, options);
+		} //Thailand's exports from 2010 to 2016
+		
+		
+		function PolandAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('poland_all_Im_div'));
+			chart.draw(data, options);
+		} //Poland's imports from 2010 to 2016
+		
+		function PolandAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('poland_all_ex_div'));
+			chart.draw(data, options);
+		} //Poland's exports from 2010 to 2016		
+	
+		
+		function AustraliaAllImports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('australia_all_Im_div'));
+			chart.draw(data, options);
+		} //Australia's imports from 2010 to 2016
+		
+		function AustraliaAllExports(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in Percentage'},
+				hAxis: {title: 'Years'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('australia_all_ex_div'));
+			chart.draw(data, options);
+		} //Australia's exports from 2010 to 2016
+		
+		
+		
+	</script>
+</head>
+
+<body>
+	
+		<h1 align="center"><font color="#0000A8" face="Times New Roman" >Final Project</font></h1>
+		<h4 align="center"><font color="#0000A8">-----------------------------------------------------------------------------------</font></h4>
+		<h4 align="center"><font color="#0000A8"> Visualization of Complex Data (DATS 6401_O10)  |  Phoebe Wu</font></h4>
+	<br />
+		
+		<ol><h2 align="center"><font color="#0000E6">Merchandise Trade Analysis for Top 20 Countries From 2010 to 2016</font></h2>
+			
+		<h4><font color="#7878FF">Top 20 Countries By Merchandise Trade in 2016 (US $)</font></h4>
+		<div id="topeducation_spending_div" style="width:800px height:700"></div>
+	<br /><br />
+	
+	<h4><a href="https://www.datawrapper.de/_/7MlH3/"><font color="#7878FF">Top 20 Countries in Merchandise Trade from 2010 to 2016</font></a></h4>	
+	
+	<h4><a href="https://www.datawrapper.de/_/RhxtG/"><font color="#7878FF">Top 20 Countries' Merchandise Imports from 2010 to 2016</font></a></h4>
+	<h4><a href="https://www.datawrapper.de/_/3JoC1/"><font color="#7878FF">Top 20 Countries' Merchandise Exports from 2010 to 2016</font></a></h4>		
+	
+	<h3>Merchandise in Agricultural & Raw Materials</h3>
+	<h4><a href="https://www.datawrapper.de/_/FsrXQ/"><font color="#7878FF">Agricultural & Raw Materials Imports from 2010 to 2016</font></a></h4>	
+	<h4><a href="https://www.datawrapper.de/_/boAGI/"><font color="#7878FF">Agricultural & Raw Materials Exports from 2010 to 2016</font></a></h4>	
+	
+	<h3>Merchandise in Food</h3>
+	<h4><a href="https://www.datawrapper.de/_/AdJU8/"><font color="#7878FF">Food Imports from 2010 to 2016</font></a></h4>	
+	<h4><a href="https://www.datawrapper.de/_/p8Dg7/"><font color="#7878FF">Food Exports from 2010 to 2016</font></a></h4>	
+	
+	<h3>Merchandise in Manufacture</h3>
+	<h4><a href="https://www.datawrapper.de/_/OJVPX/"><font color="#7878FF">Manufacture Imports from 2010 to 2016</font></a></h4>	
+	<h4><a href="https://www.datawrapper.de/_/NJ1Mw/"><font color="#7878FF">Manufacture Exports from 2010 to 2016</font></a></h4>	
+	
+	<h3>Merchandise in Fuel</h3>
+	<h4><a href="https://www.datawrapper.de/_/0pI3T/"><font color="#7878FF">Fuel Imports from 2010 to 2016</font></a></h4>	
+	<h4><a href="https://www.datawrapper.de/_/uZLg7/"><font color="#7878FF">Fuel Exports from 2010 to 2016</font></a></h4>	
+	
+	<h3>Merchandise in Ores & Metals</h3>
+	<h4><a href="https://www.datawrapper.de/_/K1Oca/"><font color="#7878FF">Ores & Metals Imports from 2010 to 2016</font></a></h4>	
+	<h4><a href="https://www.datawrapper.de/_/dffmF/"><font color="#7878FF">Ores & Metals Exports from 2010 to 2016</font></a></h4>	
+	<br /><br />
+	
+	<h3>Export Growth vs Import Growth 2011~2016</h3>
+	<h4><a href="https://public.tableau.com/profile/phoebe.wu7036#!/vizhome/ExportGrowthvsImportGrowth20112016/Dashboard1?publish=yes"><font color="#7878FF">Top 20 Countries' Export Growth and Import Growth 2011~2016</font></a></h4>	
+	
+	<br /><br />
+	<h3 align="center"><font color="#0000E6">USA</h3>
+	<h4><font color="#7878FF">USA Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="usa_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">USA Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="usa_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">China</h3>
+	<h4><font color="#7878FF">China's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="china_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">China's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="china_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Germany</h3>
+	<h4><font color="#7878FF">Germany's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="germany_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Germany's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="germany_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Japan</h3>
+	<h4><font color="#7878FF">Japan's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="japan_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Japan's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="japan_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Netherlands</h3>	
+	<h4><font color="#7878FF">Netherlands's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="netherlands_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Netherlands's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="netherlands_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">France</h3>
+	<h4><font color="#7878FF">France's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="france_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">France's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="france_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">UK</h3>
+	<h4><font color="#7878FF">UK's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="uk_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">UK's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="uk_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Korea</h3>
+	<h4><font color="#7878FF">Korea's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="korea_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Korea's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="korea_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Italy</h3>
+	<h4><font color="#7878FF">Italy's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="italy_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Italy's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="italy_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Canada</h3>
+	<h4><font color="#7878FF">Canada's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="canada_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Canada's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="canada_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Maxico</h3>
+	<h4><font color="#7878FF">Mexico's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="mexico_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Mexico's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="mexico_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Belgium</h3>
+	<h4><font color="#7878FF">Belgium's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="belgium_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Belgium's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="belgium_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Singapore</h3>
+	<h4><font color="#7878FF">Singapore's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="singapore_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Singapore's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="singapore_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">India</h3>
+	<h4><font color="#7878FF">India's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="india_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">India's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="india_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Spain</h3>
+	<h4><font color="#7878FF">Spain's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="spain_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Spain's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="spain_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Switzerland</h3>
+	<h4><font color="#7878FF">Switzerland's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="switzerland_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Switzerland's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="switzerland_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Russia</h3>
+	<h4><font color="#7878FF">Russia's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="russia_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Russia's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="russia_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Thailand</h3>
+	<h4><font color="#7878FF">Thailand's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="thailand_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Thailand's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="thailand_all_ex_div" style="width:1000px; height:500px;"></div>
+	
+	<h3 align="center"><font color="#0000E6">Poland</h3>
+	<h4><font color="#7878FF">Poland's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="poland_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Poland's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="poland_all_ex_div" style="width:1000px; height:500px;"></div>
+
+	<h3 align="center"><font color="#0000E6">Australia</h3>
+	<h4><font color="#7878FF">Australia's Merchandise Imports Percentage from 2010 ~ 2016</font></h4>
+		<div id="australia_all_Im_div" style="width:1000px; height:500px;"></div>
+	<h4><font color="#7878FF">Australia's Merchandise Exports Percentage from 2010 ~ 2016</font></h4>
+		<div id="australia_all_ex_div" style="width:1000px; height:500px;"></div>
+	<br /><br />	
+			
+	<br /><br />
+		<h4><font face="Arial"><ul type="disc"><li>My learning process</li></font></h4>
+		<p>Through this visualization project, I learn more about website designing and the visualization technique using google API.</p>
+		<p>Before this class, I did not even think that I am able to create these charts by coding. </p>
+		<p>Next, I would like to learn more about creating animated charts to make the charts look much fancier and do the best to let the complex data easies to read and understand.</p>
+		
+	<br /><br />
+	<br /><br />
+		
+	<div id="content_footer">
+		<div id="footer">
+			<p align="center">
+			<font color="#878787">
+				&copy; 
+				<script>
+					var d = new Date();
+					document.write(d.getFullYear());
+				</script> |
+				<a href="https://developers.google.com/chart/"><font color="#878787">Google Charts</font></a> |
+				<a href="https://app.datawrapper.de"><font color="#878787">My Datawrapper</font></a> |
+				<a href="https://public.tableau.com/profile/phoebe.wu7036#!/"><font color="#878787">My Tableau Public</font></a>
+			</font> 
+			</p>
+		</div><!-- footer -->			
+	</div><!-- content_footer -->
+	
+</body>
+</html>
