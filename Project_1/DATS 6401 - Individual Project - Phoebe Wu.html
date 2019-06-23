@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+		google.charts.load('current',{'packages':['corechart']});
+		google.charts.setOnLoadCallback(drawAllSheets);
+		
+		function drawAllSheets() {
+			drawSheetName('top_20_education_spending', 'SELECT A,F',
+						  topeducationSpendingResponseHandler);
+			drawSheetName('top_20_education_spending', 'SELECT A,B,C,D,E,F,G',
+						  educationalSpendingResponseHandler);			  
+			drawSheetName('topEducationGDP', 'SELECT A,B,C,D,E,F',
+						  topEduSpendingGDPResponseHandler);
+			drawSheetName('perCapitaEducation', 'SELECT A,P,Q,R,S,T',
+						  percapitaEduResponseHandler);
+			drawSheetName('topEducationGDP_perCapita', 'SELECT A,B,C,D,E,F',
+						  EpercapitaGDPResponseHandler);
+			drawSheetName('topEducationMilitary_spending_$m','SELECT A,B,C,D,E,F',
+						  EmilitarySpendingResponseHandler);
+			drawSheetName('top_20_education_spending', 'SELECT A,M',
+						  educationgrowthResponseHandler);
+			drawSheetName('top_20_education_spending', 'SELECT A,T',
+						  educationgrowthpercentResponseHandler);
+			drawSheetName('fastest_growth_edu_spending', 'SELECT A,D',
+						  EfastgrowingFixResponseHandler);
+			drawSheetName('fastest_growth_edu_spending', 'SELECT A, I',
+						  EfastgrowingpercentResponseHandler);
+						  
+			drawSheetName('top20_healthspending', 'SELECT A,F',
+						  tophealthSpendingResponseHandler);
+			drawSheetName('top20_healthspending', 'SELECT A,B,C,D,E,F,G',
+						  healthSpendingResponseHandler);
+			drawSheetName('top20HealthGDP', 'SELECT A,B,C,D,E,F',
+						  topHealthSpendingGDPResponseHandler);
+			drawSheetName('topHealthGDP_perCapita', 'SELECT A,B,C,D,E,F',
+						  HpercapitaGDPResponseHandler);
+			drawSheetName('perCapitaHealth', 'SELECT A,B,C,D,E,F',
+						  percapitaHealthResponseHandler);
+			drawSheetName('topHealthmilitary_spending_$m','SELECT A,B,C,D,E,F',
+						  HmilitarySpendingResponseHandler);	
+			drawSheetName('top20_healthspending', 'SELECT A,M',
+						  healthSpendingGrowthResponseHandler);
+			drawSheetName('top20_healthspending', 'SELECT A,T',
+						  healthSpendingGrowthpercentResponseHandler);
+			drawSheetName('fastest_growth_health_spending', 'SELECT A,D',
+						  HfastgrowingFixResponseHandler);
+			drawSheetName('fastest_growth_health_spending', 'SELECT A,I',
+						  HfastgrowingpercentResponseHandler)
+			
+		} //drawAllSheets
+		
+		function drawSheetName(sheetName, query, responseHandler) {
+			var queryString = encodeURIComponent(query);
+			var query = new google.visualization.Query(
+				'https://docs.google.com/spreadsheets/d/1bCnQPTEzCAM8t8afjrdrJScYblewY6l70GRk-ICqYfE/gviz/tq?sheet=' 
+				+ sheetName + '&headers=1&tq=' + queryString);
+			query.send(responseHandler);
+		} //drawSheetName
+
+		function checkError(response) {
+			if (response.isError()) {
+				alert('Error in query: ' + response.getMessage() +
+					' ' + response.getDetailedMessage());
+				return;
+			}		
+		}
+		
+		
+		function topeducationSpendingResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column:1, desc:true});
+			
+			var options = {
+				height: 500,
+				colorAxis: {colors: ['#FFFF00','#00D100']}, //yellow to green
+				title: 'Top 20 Countries by Educational Spending in 2014 (US $)'
+			};
+			
+			var chart = new google.visualization.GeoChart(
+					document.getElementById('topeducation_spending_div'));
+			
+			chart.draw(data, options);
+			
+		} //topeducationSpendingResponseHandler
+		
+		
+		function educationalSpendingResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 6, desc:true});
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in USD ($)'},
+				hAxis: {title: 'Country'},
+				seriesType: 'bars',
+				series: {5: {type: 'line'}}
+			};
+			
+			var chart = new google.visualization.ComboChart(
+						document.getElementById('Educationspending_div'));
+			chart.draw(data, options);
+		} //educationalSpendingResponseHandler
+		
+		
+		function topEduSpendingGDPResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 5, desc:true});
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in USD ($)'},
+				hAxis: {title: 'Country'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('topedu_gdp_div'));
+			chart.draw(data, options);
+		} //TopEducationSpendingCountry'sGDPResponseHandler
+		
+		
+		function EpercapitaGDPResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 5, desc: true});
+			
+			var options = {
+					width: 600,
+					height: 600,
+					legend: {position: 'top', maxLines: 3},
+					bar: {groupWidth: '75%'},
+					vAxis: {title: 'Country'},
+					hAxis: {title: 'USD ($)'},
+					isStacked: true
+			};
+			
+			var chart = new google.visualization.BarChart(
+					document.getElementById('epercapitagdp_div'));
+			chart.draw(data, options);
+			
+		} //percapitaGDPResponseHandler
+		
+		
+		function percapitaEduResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 5, desc: true});
+			
+			var options = {
+					width: 600,
+					height: 600,
+					legend: {position: 'top', maxLines: 3},
+					bar: {groupWidth: '75%'},
+					vAxis: {title: 'Country'},
+					hAxis: {title: 'USD ($)'},
+					isStacked: true
+			};
+			
+			var chart = new google.visualization.BarChart(
+					document.getElementById('percapitaedu_div'));
+			chart.draw(data, options);
+		} //percapitaEducationalSpendingResponseHandler
+		
+		function EmilitarySpendingResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 5, desc: true});
+			
+			var options = {
+					width: 1000,
+					height: 550,
+					legend: {position: 'top', maxLines: 3},
+					bar: {groupWidth: '75%'},
+					vAxis: {title: 'Country'},
+					hAxis: {title: 'Million USD ($)'},
+					isStacked: true
+			};
+			
+			var chart = new google.visualization.BarChart(
+					document.getElementById('e_militaryspend_div'));
+			chart.draw(data, options);
+			
+		} //topEducationSpendingCountry's_militarySpendingResponseHandler
+	
+		function educationgrowthResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 1, desc:true});
+			
+			var options = {
+				height: 550,
+				vAxis: {title: 'Growth in USD ($)'},
+				hAxis: {title: 'Country'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('espendinggrowth_div'));
+			chart.draw(data, options);
+		} //Top20educationalSpendingGrowthResponseHandler
+		
+		function educationgrowthpercentResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 1, desc:true});
+			
+			var options = {
+				height: 600,
+				vAxis: {title: 'Growth in %'},
+				hAxis: {title: 'Country'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('espendinggrowthpercent_div'));
+			chart.draw(data, options);
+		} //Top20educationalSpendingGrowthinPercentageResponseHandler
+	
+		function EfastgrowingFixResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 400,
+				legend: {position: 'top', maxLines: 3},
+				vAxis: {title: 'USA Growth in USD'},
+				hAxis: {title: 'Year'}
+			};
+			
+			var chart = new google.visualization.LineChart(
+						document.getElementById('efastgrowthfix_div'));
+			chart.draw(data, options);
+		} //The Fastest Growth in Fix Values Country(USA) from the top 20 Educational Spending Countries
+		
+		function EfastgrowingpercentResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 400,
+				legend: {position: 'top', maxLines: 3},
+				vAxis: {title: 'Denmark Growth in percentage (%)'},
+				hAxis: {title: 'Year'}
+			};
+			
+			var chart = new google.visualization.LineChart(
+						document.getElementById('efastgrowpercent_div'));
+			chart.draw(data, options);
+		} //The Fastest Growth in Percentage Country(USA) from the top 20 Educational Spending Countries
+		
+	
+	
+		
+		
+		function tophealthSpendingResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column:1, desc:true});
+			
+			var options = {
+				displayMode: 'markers',
+				height: 500,
+				colorAxis: {colors: ['#e7711c','#4374e0']}, //orange to blue
+				title: 'Top 20 Countries by Health Spending in 2014 (US $)'
+			};
+			
+			var chart = new google.visualization.GeoChart(
+					document.getElementById('tophealthspending_div'));
+			chart.draw(data, options);
+			
+		} //2014_top20HealthcareSpendingResponseHandler 
+		
+		
+		function healthSpendingResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 6, desc:true});
+			
+			var options = {
+				height: 600,
+				vAxis: {title: 'Spending in USD ($)'},
+				hAxis: {title: 'Country'},
+				seriesType: 'bars',
+				series: {5: {type: 'line'}}
+			};
+			
+			var chart = new google.visualization.ComboChart(
+						document.getElementById('healthpending_div'));
+			chart.draw(data, options);
+		} //healthcareSpendingResponseHandler
+		
+		function topHealthSpendingGDPResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 5, desc:true});
+			
+			var options = {
+				height: 500,
+				vAxis: {title: 'Spending in USD ($)'},
+				hAxis: {title: 'Country'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('tophealth_gdp_div'));
+			chart.draw(data, options);
+		} //Top20HealthcareSpendingCountry'sGDPResponseHandler
+		
+		function HpercapitaGDPResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 5, desc: true});
+			
+			var options = {
+					width: 600,
+					height: 600,
+					legend: {position: 'top', maxLines: 3},
+					bar: {groupWidth: '75%'},
+					vAxis: {title: 'Country'},
+					hAxis: {title: 'USD ($)'},
+					isStacked: true
+			};
+			
+			var chart = new google.visualization.BarChart(
+					document.getElementById('hpercapitagdp_div'));
+			chart.draw(data, options);
+			
+		} //Top20HealthcareSpendingCountries'percapitaGDPResponseHandler
+		
+		
+		function percapitaHealthResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 5, desc: true});
+			
+			var options = {
+					width: 600,
+					height: 600,
+					legend: {position: 'top', maxLines: 3},
+					bar: {groupWidth: '75%'},
+					vAxis: {title: 'Country'},
+					hAxis: {title: 'USD ($)'},
+					isStacked: true
+			};
+			
+			var chart = new google.visualization.BarChart(
+					document.getElementById('percapitahealth_div'));
+			chart.draw(data, options);	
+		} //Top20HealthcareSpendingCountries'percapitaHealthSpendingResponseHandler
+		
+		
+		function HmilitarySpendingResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 5, desc: true});
+			
+			var options = {
+					width: 1000,
+					height: 600,
+					legend: {position: 'top', maxLines: 3},
+					bar: {groupWidth: '75%'},
+					vAxis: {title: 'Country'},
+					hAxis: {title: 'Million USD ($)'},
+					isStacked: true
+			};
+			
+			var chart = new google.visualization.BarChart(
+					document.getElementById('h_militaryspend_div'));
+			chart.draw(data, options);
+			
+		} //top20HealthcareSpendingCountry's_militarySpendingResponseHandler
+	
+		function healthSpendingGrowthResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 1, desc:true});
+			
+			var options = {
+				height: 550,
+				vAxis: {title: 'Growth in USD ($)'},
+				hAxis: {title: 'Country'}
+			};
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('healthpendinggrowth_div'));
+			chart.draw(data, options);
+		} //healthcareSpendingGrowthResponseHandler
+		
+		function healthSpendingGrowthpercentResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 1, desc:true});
+			
+			var options = {
+				height: 550,
+				vAxis: {title: 'Growth in %'},
+				hAxis: {title: 'Country'}
+				};
+			
+		
+			
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('healthpendinggrowthpercent_div'));
+			chart.draw(data, options);
+		} //healthcareSpendingGrowthinPercentageResponseHandler
+	
+		
+		function HfastgrowingFixResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 400,
+				legend: {position: 'top', maxLines: 3},
+				vAxis: {title: 'USA Growth in USD'},
+				hAxis: {title: 'Year'}
+			};
+			
+			var chart = new google.visualization.LineChart(
+						document.getElementById('hfastgrowthfix_div'));
+			chart.draw(data, options);
+		} //The Fastest Growth in Fix Values Country(USA) from the top 20 Healthcare Spending Countries
+		
+		function HfastgrowingpercentResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			
+			var options = {
+				height: 400,
+				legend: {position: 'top', maxLines: 3},
+				vAxis: {title: 'UK Growth in percentage (%)'},
+				hAxis: {title: 'Year'}
+			};
+			
+			var chart = new google.visualization.LineChart(
+						document.getElementById('hfastgrowpercent_div'));
+			chart.draw(data, options);
+		} //The Fastest Growth in Percentage Country(USA) from the top 20 Healthcatre Spending Countries
+		
+
+	
+	</script>
+</head>
+
+<body>
+	
+		<h1 align="center"><font color="#0000A8" face="Times New Roman" >Individual Project 1</font></h1>
+		<h4 align="center"><font color="#0000A8">-----------------------------------------------------------------------------------</font></h4>
+		<h4 align="center"><font color="#0000A8"> Visualization of Complex Data (DATS 6401_O10)  |  Phoebe Wu</font></h4>
+	<br />
+		
+		<ol><h2 align="center"><font color="#0000E6">Educational Spending Analysis for Top 20 Countries</font></h2>
+			
+		<h4><font color="#7878FF">Top 20 Countries By Educational Spending in 2014 (US $)</font></h4>
+		<div id="topeducation_spending_div" style="width:800px height:700"></div>
+		
+	<br /><br />
+		<h4><a href="https://www.datawrapper.de/_/jhpny/"><font color="#7878FF">Top 20 Educational Spending Countries From 2010 - 2014</font></a></h4>
+		<h4><font color="#7878FF">Top 20 Educational Spending Countries (2010-2014)</font></h4>
+		<div id="Educationspending_div" style="width:1200px; height:500px;"></div>
+	
+		<h4><font color="#7878FF">Top 20 Educational Expenditure Countries' GDP (2010-2014)</font></h4>
+		<div id="topedu_gdp_div" style="width:1200px; height:500px;"></div>
+	
+	<table>
+		<tr>
+			<th><h4><font color="#7878FF">Top 20 Educational Expenditure Countries' Per Capita GDP</font></h4></th>
+			<th><font color="#7878FF">Top 20 Educational Expenditure Countries' Educational Expenditure Per Capita</font></th>
+		</tr>
+		<tr>
+			<td><div id="epercapitagdp_div" style="width:600px"></div></td>
+			<td><div id="percapitaedu_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	
+			<b><font color="#7878FF">Top 20 Educational Expenditure Countries' Military Spending</font></b>
+			<div id="e_militaryspend_div" style="width:1000px"></div>
+			
+			<h4><a href="https://public.tableau.com/views/EducationSpending_0/2010E_vsM?:embed=y&:display_count=yes&publish=yes"><font color="#7878FF">Educational Spending vs Military Spending In 2010 (%GDP)</font></a></h4>
+			<h4><a href="https://public.tableau.com/views/EducationSpending_0/2011E_vsM?:embed=y&:display_count=yes"><font color="#7878FF">Educational Spending vs Military Spending In 2011 (%GDP)</font></a></h4>
+			<h4><a href="https://public.tableau.com/views/EducationSpending_0/2012E_vsM?:embed=y&:display_count=yes"><font color="#7878FF">Educational Spending vs Military Spending In 2012 (%GDP)</font></a></h4>
+			<h4><a href="https://public.tableau.com/views/EducationSpending_0/2013E_vsM?:embed=y&:display_count=yes"><font color="#7878FF">Educational Spending vs Military Spending In 2013 (%GDP)</font></a></h4>
+			<h4><a href="https://public.tableau.com/views/EducationSpending_0/2014E_vsM?:embed=y&:display_count=yes"><font color="#7878FF">Educational Spending vs Military Spending In 2014 (%GDP)</font></a></h4>
+	<br /><br />	
+			
+			<b><font color="#7878FF">Top 20 Eduational Expenditure Countries' Eduational Expenditure Growth</font></b>
+			<div id="espendinggrowth_div" style="width:1100px"></div>
+	<br /><br />
+			<b><font color="#7878FF">Top 20 Eduational Expenditure Countries' Eduational Expenditure Growth In Percentage</font></b>	
+			<div id="espendinggrowthpercent_div" style="width:1100px"></div>
+	<br /><br />
+	<table>	
+		<tr>
+			<th><font color="#7878FF">The Fastest Growing Country's Educational Spending Growth In Fix Values</font></th>
+			<th><font color="#7878FF">The Fastest Growing Country's Educational Spending Growth In Percentage</font></th>
+		</tr>
+		<tr>
+			<td><div id="efastgrowthfix_div" style="width:650px"></div></td>
+			<td><div id="efastgrowpercent_div" style="width:700px"></div></td>
+		</tr>
+	</table>
+		
+	<br /><br />
+	<br /><br />
+	
+			<h2 align="center"><font color="#0000E6">Healthcare Spending Analysis for Top 20 Countries</font></h2>
+	<br /><br />
+			<b><font color="#7878FF">Top 20 Countries By Healthcare Spending in 2014 (US $)</font></b>
+			<div id="tophealthspending_div" style="width:800px height:700"></div>
+			<h4><a href="https://www.datawrapper.de/_/hdydB/"><font color="#7878FF">Top 20 Healthcare Spending Countries From 2010 - 2014</font></a></h4>
+	<br /><br />	
+			<b><font color="#7878FF">Top 20 Healthcare Spending Countries (2010-2014)</font></b>
+			<div id="healthpending_div" style="width:1200px; height:600px;"></div>
+	<br /><br />
+			<b><font color="#7878FF">Top 20 Healthcare Expenditure Countries' GDP (2010-2014)</font></b>
+			<div id="tophealth_gdp_div" style="width:1200px; height:600px;"></div>
+	<table>
+		<tr>
+			<th><font color="#7878FF">Top 20 Healthcare Expenditure Countries' Per Capita GDP</font></th>
+			<th><font color="#7878FF">Top 20 Healthcare Expenditure Countries' Healthcare Spending Per Capita</font></th>
+		</tr>
+		<tr>
+			<td><div id="hpercapitagdp_div" style="width:600px"></div></td>
+			<td><div id="percapitahealth_div" style="width:700px"></div></td>
+		</tr>
+	</table>
+	
+			<b><font color="#7878FF">Top 20 Healthcare Expenditure Countries' Military Spending</font></b>
+			<div id="h_militaryspend_div" style="width:1000px"></div>
+		
+			<h4><a href="https://public.tableau.com/views/HealthcareSpending_0/2010H_vsM?:embed=y&:display_count=yes&publish=yes"><font color="#7878FF">Healthcare Spending vs Military Spending In 2010 (%GDP)</font></a></h4>
+			<h4><a href="https://public.tableau.com/views/HealthcareSpending_0/2011H_vsM?:embed=y&:display_count=yes"><font color="#7878FF">Healthcare Spending vs Military Spending In 2011 (%GDP)</font></a></h4>
+			<h4><a href="https://public.tableau.com/views/HealthcareSpending_0/2012H-vsM?:embed=y&:display_count=yes"><font color="#7878FF">Healthcare Spending vs Military Spending In 2012 (%GDP)</font></a></h4>
+			<h4><a href="https://public.tableau.com/views/HealthcareSpending_0/2013H_vsM?:embed=y&:display_count=yes"><font color="#7878FF">Healthcare Spending vs Military Spending In 2013 (%GDP)</font></a></h4>
+			<h4><a href="https://public.tableau.com/views/HealthcareSpending_0/2014H_vsM?:embed=y&:display_count=yes"><font color="#7878FF">Healthcare Spending vs Military Spending In 2014 (%GDP)</font></a></h4>
+	<br /><br />
+	
+			<b><font color="#7878FF">Top 20 Healthcare Expenditure Countries' Healthcare Expenditure Growth</font></b>	
+			<div id="healthpendinggrowth_div" style="width:1100px"></div>
+	<br /><br />
+			<b><font color="#7878FF">Top 20 Healthcare Expenditure Countries' Healthcare Expenditure Growth In Percentage</font></b>	
+			<div id="healthpendinggrowthpercent_div" style="width:1100px"></div>
+	<br /><br />
+	<table>	
+		<tr>
+			<th><font color="#7878FF">The Fastest Growing Country's Healthcare Spending Growth In Fix Values</font></th>
+			<th><font color="#7878FF">The Fastest Growing Country's Healthcare Spending Growth In Percentage</font></th>
+		</tr>
+		<tr>
+			<td><div id="hfastgrowthfix_div" style="width:600px"></div></td>
+			<td><div id="hfastgrowpercent_div" style="width:600px"></div></td>
+		</tr>
+	</table>
+	<br /><br />
+		<h4><font face="Arial"><ul type="disc"><li>My learning process</li></font></h4>
+		<p>Through this visualization project, I learn more about website designing and the visualization technique using google API.</p>
+		<p>Before this class, I did not even think that I am able to create these charts by coding. </p>
+		<p>Next, I would like to learn more about creating animated charts to make the charts look much fancier and do the best to let the complex data easies to read and understand.</p>
+		
+	<br /><br />
+	<br /><br />
+		
+	<div id="content_footer">
+		<div id="footer">
+			<p align="center">
+			<font color="#878787">
+				&copy; 
+				<script>
+					var d = new Date();
+					document.write(d.getFullYear());
+				</script> |
+				<a href="https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS?year_high_desc=true"><font color="#878787">Educational Spending</font></a> |					
+				<a href="https://data.worldbank.org/indicator/SH.XPD.TOTL.ZS?year_high_desc=true"><font color="#878787">Healthcare Spending</font></a> |
+				<a href="https://data.worldbank.org/indicator/SP.POP.TOTL?year_high_desc=true"><font color="#878787">Population Per Country</font></a> |
+				<a href="https://data.worldbank.org/indicator/NY.GDP.MKTP.CD?year_high_desc=true"><font color="#878787">GDP</font></a> |
+				<a href="https://www.sipri.org/databases/milex"><font color="#878787">Military Spending</font></a> |
+				<a href="https://developers.google.com/chart/"><font color="#878787">Google Charts</font></a> |
+				<a href="https://public.tableau.com/profile/phoebe.wu7036#!/"><font color="#878787">My Tableau Public</font></a>
+			</font> 
+			</p>
+		</div><!-- footer -->			
+	</div><!-- content_footer -->
+	
+</body>
+</html>
